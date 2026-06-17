@@ -377,12 +377,11 @@ async function queryData(t){
     // 去重query
     var seenQ={};var finalQ=[];
     for(var i=0;i<queries.length;i++){if(!seenQ[queries[i]]){seenQ[queries[i]]=1;finalQ.push(queries[i]);}}
-    // 并发搜索（最多20个query）
+    // 并行搜索（所有query同时发，不等排队）
+    var tasks=[];
+    for(var i=0;i<Math.min(20,finalQ.length);i++){tasks.push(searchWeb(finalQ[i],cfg,3));}
     var allWeb=[];
-    for(var i=0;i<Math.min(20,finalQ.length);i++){
-      var wr=await searchWeb(finalQ[i],cfg,3);
-      allWeb=allWeb.concat(wr);
-    }
+    try{var results=await Promise.all(tasks);for(var i=0;i<results.length;i++){allWeb=allWeb.concat(results[i]);}}catch(e){console.warn('并行搜索部分失败:',e.message);}
     var seen={};var unique=[];
     for(var i=0;i<allWeb.length;i++){var k=allWeb[i].slice(0,50);if(!seen[k]){seen[k]=1;unique.push(allWeb[i]);}}
     if(unique.length){webData='【联网搜索·仅供参考】\n';unique.slice(0,25).forEach(function(w){webData+='· '+w.slice(0,350)+'\n';});}
