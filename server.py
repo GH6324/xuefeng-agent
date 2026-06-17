@@ -328,7 +328,7 @@ async function queryData(t){
   console.log('正则提取:',JSON.stringify(info));
 
   console.log('DEBUG queryData params:',JSON.stringify({province:info.province,rank:info.rank,score:info.score,majors:info.majors}));
-  if(!info.province||(!info.rank&&!info.score)){console.log('无法提取省份/位次/分数，跳过DB搜索');return'缺少省份或分数位次';}
+  if(!info.province&&!info.score){console.log('缺少省份和分数，跳过DB');return'缺少省份或分数位次';}
 
   // 第3步：搜索本地数据库
   var dbData='';
