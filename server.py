@@ -330,11 +330,11 @@ async function queryData(t){
   console.log('正则提取:',JSON.stringify(info));
 
   console.log('DEBUG queryData params:',JSON.stringify({province:info.province,rank:info.rank,score:info.score,majors:info.majors}));
-  if(!info.province&&!info.score){console.log('缺少省份和分数，跳过DB');return'缺少省份或分数位次';}
+  var dbSkip = !info.province&&!info.score; if(dbSkip){console.log('缺少省份和分数，跳过DB但保留联网搜索');}
 
   // 第3步：搜索本地数据库
   var dbData='';
-  try{
+  if(!dbSkip){try{
     var qp=['province='+encodeURIComponent(info.province),'rank='+info.rank,'score='+info.score];
     if(info.majors&&info.majors.length){qp.push('keyword='+encodeURIComponent(info.majors.join(',')));}
     if(info.schools.length)qp.push('school='+encodeURIComponent(info.schools[0]));
@@ -349,7 +349,7 @@ async function queryData(t){
         if(!j.chong.length&&!j.wen.length&&!j.bao.length){dbData+='(数据库暂无数据。查询参数: 省='+info.province+' 位次='+info.rank+' 分数='+info.score+' 关键词='+(info.majors.join(',')||'无')+')\n';}
       }
     }
-  }catch(e){console.warn('DB搜索失败:',e.message);}
+  }catch(e){console.warn('DB搜索失败:',e.message);}}
 
   // 第4步：联网搜索——三路并发：验证DB数据 + 补全2025 + 行业趋势
   var webData='';
@@ -376,8 +376,15 @@ async function queryData(t){
     if(info.keywords&&info.keywords.length){
       for(var i=0;i<Math.min(2,info.keywords.length);i++)queries.push(info.keywords[i]);
     }
+    if(dbSkip){
+      queries.push(t+' 高考志愿 推荐学校 录取分数线');
+      queries.push(t+' 高考 位次 能报哪些大学');
+      if(info.majors&&info.majors.length)queries.push(info.majors.join(' ')+'专业 就业前景');
+      if(info.schools&&info.schools.length)queries.push(info.schools[0]+' 录取分数线 2025');
+    }
     // 去重query
     var seenQ={};var finalQ=[];
+
     for(var i=0;i<queries.length;i++){if(!seenQ[queries[i]]){seenQ[queries[i]]=1;finalQ.push(queries[i]);}}
     // 分3批并行搜索（每批5个同时发，避免限流）
     var allWeb=[];
