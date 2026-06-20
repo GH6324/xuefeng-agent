@@ -126,11 +126,14 @@ class Handler(BaseHTTPRequestHandler):
                         base2 = "province LIKE ? AND (score>0 OR rank>0)"
                         bp2 = [f'%{prov}%']
                         chong = [{'school':r[0],'major':r[1],'score':r[2],'rank':r[3],'year':r[4]} for r in
-                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} ORDER BY score DESC LIMIT 80", bp2).fetchall()]
+                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} AND score>? AND score<=? ORDER BY score DESC LIMIT 80",
+                            bp2+[score, score+25]).fetchall()]
                         wen = [{'school':r[0],'major':r[1],'score':r[2],'rank':r[3],'year':r[4]} for r in
-                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} ORDER BY score ASC LIMIT 50", bp2).fetchall()]
+                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} AND score>=? AND score<=? ORDER BY score ASC LIMIT 50",
+                            bp2+[score-25, score+25]).fetchall()]
                         bao = [{'school':r[0],'major':r[1],'score':r[2],'rank':r[3],'year':r[4]} for r in
-                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} ORDER BY score ASC LIMIT 50", bp2).fetchall()]
+                            conn.execute(f"SELECT school_name,major_name,score,rank,year FROM admission WHERE {base2} AND score>=? AND score<? ORDER BY score ASC LIMIT 50",
+                            bp2+[score-50, score-25]).fetchall()]
                 conn.close()
                 return self._send({'rank':rank,'score':score,'chong':chong,'wen':wen,'bao':bao})
             return self._send({'error':'need province and rank or score'},400)
