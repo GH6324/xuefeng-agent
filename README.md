@@ -173,7 +173,7 @@
 |------|------|
 | 抖音名 | **OLO** |
 | 抖音号 | `27608595542` |
-| 主页链接 | [douyin.com/user/27608595542](https://www.douyin.com/user/27608595542) |
+| 主页链接 | [douyin.com/user/OLO](https://www.douyin.com/user/MS4wLjABAAAAefIKNArplrWG6MWFKtPgqruFujYdBPa-Izh6j_b3je8383KNNs-AAxWDFqYQrC0L) |
 
 > 关注获取最新更新、使用教程和志愿填报干货。
 
