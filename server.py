@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """雪峰Agent — 单文件服务器：HTML UI + API + 数据库查询"""
-import os, re, json, sqlite3, gzip, shutil, urllib.request, urllib.parse, openpyxl
+import os, re, json, sqlite3, gzip, shutil, urllib.request, urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.server import ThreadingHTTPServer
 import sys
@@ -26,6 +26,9 @@ def clean_num(v):
     try: return int(float(s))
     except: return None
 def load_user_data():
+    if not os.path.exists(USER_XLSX): return
+    try: import openpyxl
+    except ImportError: return
     global USER_DATA; USER_DATA = []
     if not os.path.exists(USER_XLSX): return
     try:
@@ -96,7 +99,7 @@ def web_search(query, n=5):
     if not results: results.append('未搜到结果')
     return results[:n]#!/usr/bin/env python3
 """雪峰Agent — 单文件服务器：HTML UI + API + 数据库查询"""
-import os, re, json, sqlite3, gzip, shutil, urllib.request, urllib.parse, openpyxl
+import os, re, json, sqlite3, gzip, shutil, urllib.request, urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.server import ThreadingHTTPServer
 import sys
@@ -122,6 +125,9 @@ def clean_num(v):
     try: return int(float(s))
     except: return None
 def load_user_data():
+    if not os.path.exists(USER_XLSX): return
+    try: import openpyxl
+    except ImportError: return
     global USER_DATA; USER_DATA = []
     if not os.path.exists(USER_XLSX): return
     try:
