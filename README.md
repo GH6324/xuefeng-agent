@@ -216,6 +216,6 @@
 | **删除原作者署名 / 宣称原创** | ❌ **侵权，无论是否商业使用** |
 | **改为 MIT 等宽松协议重新发布** | ❌ **违反 AGPLv3 传染性条款** |
 
-> **原作者（贺子麒 / ziqihe10-droid）保留单独商业授权的权利。**
+> **原作者（ziqihe10-droid / ziqihe10-droid）保留单独商业授权的权利。**
 
 完整协议文本：[LICENSE](LICENSE) · https://www.gnu.org/licenses/agpl-3.0.html
